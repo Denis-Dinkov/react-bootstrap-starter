@@ -1,11 +1,12 @@
 import Button from '../ui/Button';
 import { useAccount, useConnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
+import AddQuiz from './AddQuiz';
 
 const Welcome = () => {
   // const account = useAccount();
   const account = useAccount();
-  const { connect } = useConnect();
+  const { connect, status } = useConnect();
 
   return (
     <>
@@ -20,14 +21,18 @@ const Welcome = () => {
 
       <div className="d-grid d-lg-block">
         {account.isConnected ? (
-          <Button size="large" type="primary" className="mt-5">
-            You are connected. 🚀
-          </Button>
+          <>
+            <AddQuiz />
+            <Button size="large" type="primary" className="mt-5 mx-3">
+              You are connected. 🚀
+            </Button>
+          </>
         ) : (
           <Button
             size="large"
             type="primary"
             className="mt-5"
+            loading={status === 'pending'}
             onClick={() => connect({ connector: injected() })}
           >
             Connect Wallet

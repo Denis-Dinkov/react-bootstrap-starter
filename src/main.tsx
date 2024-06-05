@@ -10,6 +10,7 @@ import { config } from './wagmi.ts';
 
 import App from './components/App.tsx';
 import RWD from './components/RWD.tsx';
+import QuizGame from './components/QuizzGame.tsx';
 
 import './styles/styles.scss';
 
@@ -22,10 +23,13 @@ const router = createBrowserRouter([
     path: 'rwd',
     element: <RWD />,
   },
+  {
+    path: 'quiz',
+    element: <QuizGame />,
+  },
 ]);
 
 globalThis.Buffer = Buffer;
-
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
