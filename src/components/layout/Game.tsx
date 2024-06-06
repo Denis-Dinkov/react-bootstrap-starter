@@ -11,7 +11,6 @@ const Game = () => {
     functionName: 'getQuizzes',
   });
 
-  console.log(quizzes.data);
   return (
     <div className="mt-10">
       <h2 className="heading-medium text-center ">
@@ -20,11 +19,13 @@ const Game = () => {
           : 'Connect your wallet to start playing'}
       </h2>
 
-      <div className="row mt-5 mt-lg-10">
-        {(quizzes.data as [])?.map(quiz => (
-          <QuizCard key={quiz} contractId={quiz} />
-        ))}
-      </div>
+      {account.isConnected && (
+        <div className="row mt-5 mt-lg-10">
+          {(quizzes.data as [])?.map(quiz => (
+            <QuizCard key={quiz} contractId={quiz} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../ui/Button';
 import Modal from '../ui/Modal';
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { abi } from '../../contract/QuizFactory.json';
 
 const FACTOR_CONTRACT_ADDRESS = import.meta.env.VITE_QUIZ_FACTOR_CONTRACT_ADDRESS;
@@ -10,7 +10,16 @@ const AddQuiz = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const { writeContract, isConfirming } = useWriteContract();
+  const { data: hash, writeContract, isPending } = useWriteContract();
+  const { isLoading } = useWaitForTransactionReceipt({
+    hash,
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      setModalOpen(false);
+    }
+  }, [isLoading]);
 
   const handleCreateQuiz = () => {
     writeContract({
@@ -77,7 +86,8 @@ const AddQuiz = () => {
             <Button
               className="ms-3"
               type="primary"
-              loading={isConfirming}
+              loading={isPending || isLoading}
+              disabled={!question || !answer}
               onClick={() => handleCreateQuiz()}
             >
               Create Quiz
