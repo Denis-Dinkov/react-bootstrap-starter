@@ -4,7 +4,6 @@ import { injected } from 'wagmi/connectors';
 import AddQuiz from './AddQuiz';
 
 const Welcome = () => {
-  // const account = useAccount();
   const account = useAccount();
   const { connect, status } = useConnect();
 
