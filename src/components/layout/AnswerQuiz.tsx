@@ -4,7 +4,7 @@ import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Address } from 'viem';
 import Button from '../ui/Button';
 
-const AnswerQuiz = ({ contractId, balance }: { contractId: Address; balance: string }) => {
+const AnswerQuiz = ({ contractId, balance }: { contractId: Address; balance: bigint }) => {
   const [answer, setAnswer] = useState('');
   const { data: contractHash, writeContract, failureReason, isPending } = useWriteContract();
 
