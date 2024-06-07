@@ -4,7 +4,7 @@ import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { Address } from 'viem';
 import Button from '../ui/Button';
 
-const AnswerQuiz = ({ contractId }: { contractId: Address }) => {
+const AnswerQuiz = ({ contractId, balance }: { contractId: Address; balance: string }) => {
   const [answer, setAnswer] = useState('');
   const { data: contractHash, writeContract, failureReason, isPending } = useWriteContract();
 
@@ -45,10 +45,10 @@ const AnswerQuiz = ({ contractId }: { contractId: Address }) => {
         type="secondary"
         className="mt-3 mx-2"
         onClick={() => handleAnswer()}
-        disabled={!answer}
+        disabled={!answer || !balance}
         loading={isLoading || isPending}
       >
-        {isPending && failureReason?.name ? 'You win' : 'Answer'}
+        {balance ? 'Answer' : 'No bounty left'}
       </Button>
     </>
   );

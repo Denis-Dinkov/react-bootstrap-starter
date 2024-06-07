@@ -19,14 +19,14 @@ const QuizCard = ({ contractId }: { contractId: Address }) => {
   });
 
   return (
-    <div className="col-lg-4 mt-4">
-      <div className="rounded p-5 p-lg-6 bg-primary d-s-flex align-items-center">
+    <div className="col-lg-4 mt-4 ">
+      <div className="rounded p-5 p-lg-6 bg-primary d-s-flex align-items-center h-100">
         <div className="mt-4 mt-lg-0">
           <h2 className="heading-small text-white">{String(question.data)}</h2>
         </div>
         <div>
           <div className="form-group mt-3">
-            <AnswerQuiz contractId={contractId} />
+            <AnswerQuiz contractId={contractId} balance={balance.data as bigint} />
             <FundContract contractId={contractId} />
             <h4 className=" mt-5 text-center">
               Bounty: {balance.data ? formatEther(balance.data as bigint) : 0} eth.

@@ -3,11 +3,13 @@ import { abi as factoryAbi } from '../../contract/QuizFactory.json';
 
 import QuizCard from './QuizCard';
 
-const Game = () => {
+const FACTOR_CONTRACT_ADDRESS = import.meta.env.VITE_QUIZ_FACTOR_CONTRACT_ADDRESS;
+
+const QuizzesList = () => {
   const account = useAccount();
   const quizzes = useReadContract({
     abi: factoryAbi,
-    address: '0xFb8e84eb94EE4DEcc3E87052EA6d0C29f6000e4D',
+    address: FACTOR_CONTRACT_ADDRESS,
     functionName: 'getQuizzes',
   });
 
@@ -30,4 +32,4 @@ const Game = () => {
   );
 };
 
-export default Game;
+export default QuizzesList;

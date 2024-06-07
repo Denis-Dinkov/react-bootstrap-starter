@@ -3,30 +3,40 @@ import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { abi } from '../../contract/QuizFactory.json';
+import { ethers } from 'ethers';
 
 const FACTOR_CONTRACT_ADDRESS = import.meta.env.VITE_QUIZ_FACTOR_CONTRACT_ADDRESS;
 
 const AddQuiz = () => {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
   const { data: hash, writeContract, isPending } = useWriteContract();
   const { isLoading } = useWaitForTransactionReceipt({
     hash,
   });
+  const salt = '0x123';
+
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading) {
       setModalOpen(false);
+      setQuestion('');
+      setAnswer('');
     }
   }, [isLoading]);
 
   const handleCreateQuiz = () => {
+    const hashedAnswerVariable = ethers.solidityPackedKeccak256(
+      ['string', 'string'],
+      [answer, salt],
+    );
+
     writeContract({
       abi,
       address: FACTOR_CONTRACT_ADDRESS,
       functionName: 'createQuiz',
-      args: [String(question), String(answer)],
+      args: [String(question), String(hashedAnswerVariable)],
     });
   };
 
@@ -58,6 +68,7 @@ const AddQuiz = () => {
               className="form-control"
               id="question"
               placeholder="Enter the question"
+              value={question}
               onChange={e => {
                 setQuestion(e.target.value);
               }}
@@ -72,6 +83,7 @@ const AddQuiz = () => {
               className="form-control"
               id="answer"
               placeholder="Enter the answer"
+              value={answer}
               onChange={e => {
                 setAnswer(e.target.value);
               }}

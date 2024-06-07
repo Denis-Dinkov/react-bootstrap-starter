@@ -27,7 +27,7 @@ const FundContract = ({ contractId }: { contractId: Address }) => {
       onClick={addEth}
       loading={isConfirmingTransaction || isPendingTransaction}
     >
-      Add 0.001 eth
+      Fund 0.001 eth
     </Button>
   );
 };
