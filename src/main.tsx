@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Buffer } from 'buffer';
+import { ContractProvider } from './context/ContractContext.tsx';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { WagmiProvider } from 'wagmi';
@@ -10,7 +11,7 @@ import { config } from './wagmi.ts';
 
 import App from './components/App.tsx';
 import RWD from './components/RWD.tsx';
-import QuizGame from './components/QuizzGame.tsx';
+import QuizGame from './components/QuizGame.tsx';
 
 import './styles/styles.scss';
 
@@ -36,7 +37,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <ContractProvider>
+          <RouterProvider router={router} />
+        </ContractProvider>
       </QueryClientProvider>
     </WagmiProvider>
   </React.StrictMode>,

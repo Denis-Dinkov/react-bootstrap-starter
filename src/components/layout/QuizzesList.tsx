@@ -1,17 +1,11 @@
-import { useAccount, useReadContract } from 'wagmi';
-import { abi as factoryAbi } from '../../contract/QuizFactory.json';
-
+import { useAccount } from 'wagmi';
+import { useContext } from 'react';
+import { ContractContext } from '../../context/ContractContext';
 import QuizCard from './QuizCard';
 
-const FACTOR_CONTRACT_ADDRESS = import.meta.env.VITE_QUIZ_FACTOR_CONTRACT_ADDRESS;
-
 const QuizzesList = () => {
+  const { quizList, isFetchingQuizzes } = useContext(ContractContext);
   const account = useAccount();
-  const quizzes = useReadContract({
-    abi: factoryAbi,
-    address: FACTOR_CONTRACT_ADDRESS,
-    functionName: 'getQuizzes',
-  });
 
   return (
     <div className="mt-10">
@@ -21,10 +15,13 @@ const QuizzesList = () => {
           : 'Connect your wallet to start playing'}
       </h2>
 
+      {/* list all quizzes */}
       {account.isConnected && (
         <div className="row mt-5 mt-lg-10">
-          {(quizzes.data as [])?.map(quiz => (
-            <QuizCard key={quiz} contractId={quiz} />
+          {isFetchingQuizzes && <p>Loading quizzes...</p>}
+          {!isFetchingQuizzes && quizList.length === 0 && <p>No quizzes available</p>}
+          {quizList.map(quiz => (
+            <QuizCard key={quiz} quizId={quiz} />
           ))}
         </div>
       )}

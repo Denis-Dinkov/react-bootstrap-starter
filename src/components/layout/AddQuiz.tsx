@@ -1,43 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import Button from '../ui/Button';
 import Modal from '../ui/Modal';
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { abi } from '../../contract/QuizFactory.json';
 import { ethers } from 'ethers';
-
-const FACTOR_CONTRACT_ADDRESS = import.meta.env.VITE_QUIZ_FACTOR_CONTRACT_ADDRESS;
+import { ContractContext } from '../../context/ContractContext';
 
 const AddQuiz = () => {
-  const { data: hash, writeContract, isPending } = useWriteContract();
-  const { isLoading } = useWaitForTransactionReceipt({
-    hash,
-  });
-  const salt = '0x123';
-
+  const { createQuiz, isCreatingQuiz } = useContext(ContractContext);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (!isLoading) {
-      setModalOpen(false);
-      setQuestion('');
-      setAnswer('');
-    }
-  }, [isLoading]);
-
-  const handleCreateQuiz = () => {
+  const handleCreateQuiz = async () => {
+    const salt = '0x123';
     const hashedAnswerVariable = ethers.solidityPackedKeccak256(
       ['string', 'string'],
       [answer, salt],
     );
 
-    writeContract({
-      abi,
-      address: FACTOR_CONTRACT_ADDRESS,
-      functionName: 'createQuiz',
-      args: [String(question), String(hashedAnswerVariable)],
-    });
+    await createQuiz(question, hashedAnswerVariable, '0.000001');
+    setModalOpen(false);
   };
 
   return (
@@ -98,7 +79,7 @@ const AddQuiz = () => {
             <Button
               className="ms-3"
               type="primary"
-              loading={isPending || isLoading}
+              loading={isCreatingQuiz}
               disabled={!question || !answer}
               onClick={() => handleCreateQuiz()}
             >

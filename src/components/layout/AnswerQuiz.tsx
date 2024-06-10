@@ -1,31 +1,22 @@
-import { useEffect, useState } from 'react';
-import { abi } from '../../contract/QuizGame.json';
-import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { useState, useContext } from 'react';
+import { ContractContext } from '../../context/ContractContext';
 import { Address } from 'viem';
 import Button from '../ui/Button';
 
-const AnswerQuiz = ({ contractId, balance }: { contractId: Address; balance: bigint }) => {
+const AnswerQuiz = ({ contractId, balance }: { contractId: Address; balance: string }) => {
   const [answer, setAnswer] = useState('');
-  const { data: contractHash, writeContract, failureReason, isPending } = useWriteContract();
+  const [isLoading, setIsLoading] = useState(false);
+  const { answerQuiz } = useContext(ContractContext);
 
-  const { isLoading } = useWaitForTransactionReceipt({
-    hash: contractHash,
-  });
-
-  useEffect(() => {
-    if (failureReason?.name === 'ContractFunctionExecutionError') {
-      alert('Wrong answer');
+  const handleAnswer = async () => {
+    try {
+      setIsLoading(true);
+      await answerQuiz(contractId, answer);
+    } catch (error) {
+      console.error('Error answering quiz', error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [failureReason]);
-
-  const handleAnswer = () => {
-    writeContract({
-      abi: abi,
-      address: contractId,
-      functionName: 'guess',
-      args: [answer],
-    });
-
     setAnswer('');
   };
 
@@ -46,7 +37,7 @@ const AnswerQuiz = ({ contractId, balance }: { contractId: Address; balance: big
         className="mt-3 mx-2"
         onClick={() => handleAnswer()}
         disabled={!answer || !balance}
-        loading={isLoading || isPending}
+        loading={isLoading}
       >
         {balance ? 'Answer' : 'No bounty left'}
       </Button>
