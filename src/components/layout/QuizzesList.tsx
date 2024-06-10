@@ -15,11 +15,12 @@ const QuizzesList = () => {
           : 'Connect your wallet to start playing'}
       </h2>
 
-      {/* list all quizzes */}
       {account.isConnected && (
         <div className="row mt-5 mt-lg-10">
           {isFetchingQuizzes && <p>Loading quizzes...</p>}
           {!isFetchingQuizzes && quizList.length === 0 && <p>No quizzes available</p>}
+
+          {/* list all quizzes */}
           {quizList.map(quiz => (
             <QuizCard key={quiz} quizId={quiz} />
           ))}

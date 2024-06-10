@@ -12,7 +12,7 @@ type contractContextType = {
   isCreatingQuiz: boolean;
   createQuiz: (question: string, answer: string, bounty: string) => Promise<void>;
   fundQuiz: (quizId: Address, bounty: string) => Promise<void>;
-  getQuiz: (quizId: Address) => Promise<void>;
+  getQuiz: (quizId: Address) => Promise<{ question: string; bounty: string }>;
   answerQuiz: (quizId: Address, answer: string) => Promise<void>;
 };
 

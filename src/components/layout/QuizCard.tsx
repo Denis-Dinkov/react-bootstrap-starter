@@ -6,8 +6,8 @@ import AnswerQuiz from './AnswerQuiz';
 import FundContract from './FundContract';
 
 const QuizCard = ({ quizId }: { quizId: Address }) => {
-  const [question, setQuestion] = useState();
-  const [bounty, setBounty] = useState();
+  const [question, setQuestion] = useState('');
+  const [bounty, setBounty] = useState('');
   const { getQuiz } = useContext(ContractContext);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const QuizCard = ({ quizId }: { quizId: Address }) => {
             <AnswerQuiz contractId={quizId} balance={bounty} />
             <FundContract contractId={quizId} />
             <h4 className=" mt-5 text-center">
-              Bounty: {bounty ? formatEther(bounty as bigint) : 0} eth.
+              Bounty: {bounty ? formatEther(BigInt(bounty)) : 0} eth.
             </h4>
           </div>
         </div>
